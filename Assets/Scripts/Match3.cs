@@ -439,7 +439,8 @@ public class Match3 : MonoBehaviour
             {
                 Debug.Log("Game End");
                 gameStarted = false;
-                scoreManager.ResetPoint();
+                scoreManager.ResetPoint(); // need to be moved
+                timeManager.GameEnd();
             }
         }
 
@@ -473,6 +474,7 @@ public class Match3 : MonoBehaviour
                 {
                     FlipPieces(piece.index, flippedPiece.index, false); // flip it back(main == false)
                     Combo = 0; // Reset Combo count
+                    scoreManager.UpdateCombo(Combo);
                 }
             }
             else // case : match happend
@@ -495,9 +497,11 @@ public class Match3 : MonoBehaviour
                 Debug.Log(Combo);
                 Combo++;
 
+                scoreManager.UpdateCombo(Combo);
+
                 ApplyGravityToBoard();
             }
-
+            
             flipped.Remove(flip); // remove the flip after update
             update.Remove(piece);            
         }

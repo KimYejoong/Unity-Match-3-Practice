@@ -9,10 +9,16 @@ public class TimeManager : MonoBehaviour
     [SerializeField]
     Slider timer;
 
+    [SerializeField]
+    GameObject gameOverPanel;
+
+    float TimeElapsed;
+    float TimeStarted;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameOverPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -24,5 +30,10 @@ public class TimeManager : MonoBehaviour
     public void SetTime(float timeElapsed, float timeMax)
     {
         timer.value = timeElapsed / timeMax;
+    }
+
+    public void GameEnd()
+    {
+        gameOverPanel.SetActive(true);
     }
 }

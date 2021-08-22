@@ -9,6 +9,7 @@ public class NodePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public int value;
     public Point index;
+    Match3 game;
 
     [HideInInspector]
     public Vector2 pos;
@@ -23,6 +24,7 @@ public class NodePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {        
         img = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
+        game = FindObjectOfType<Match3>();
 
         value = v;
         SetIndex(p);
@@ -74,7 +76,10 @@ public class NodePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     public void OnPointerDown(PointerEventData eventData)
-    {        
+    {
+        if (!game.GameStarted)
+            return;
+
         if (updating)
             return;
 
@@ -83,6 +88,9 @@ public class NodePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!game.GameStarted)
+            return;
+
         MovePieces.instance.DropPiece();
     }
 }
