@@ -466,6 +466,8 @@ public class Match3 : MonoBehaviour
             if (!piece.UpdatePiece()) finishedUpdating.Add(piece);            
         }
 
+        int totalCount = update.Count + finishedUpdating.Count;
+
         for (int i = 0; i < finishedUpdating.Count; i++)
         {
             NodePiece piece = finishedUpdating[i];
@@ -522,16 +524,26 @@ public class Match3 : MonoBehaviour
             }
             
             flipped.Remove(flip); // remove the flip after update
-            update.Remove(piece);
+            update.Remove(piece);            
 
-            if (gameState == GAME_STATE.Closing)
+
+            //if (TimeElapsed >= TimeLimit) // Time over, game set
+        }
+
+                    
+
+        if (gameState == GAME_STATE.Closing)
+        {
+            Debug.Log("totalCount = " + totalCount);
+            if (totalCount == 0)
             {
                 Debug.Log("Game Closing");
+
                 timeManager.GameEnd();
                 gameState = GAME_STATE.End;
             }
-            //if (TimeElapsed >= TimeLimit) // Time over, game set
         }
+
     }
 
     int CalcScore(int combo)
