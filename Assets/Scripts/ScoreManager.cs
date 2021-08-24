@@ -25,10 +25,34 @@ public class ScoreManager : MonoBehaviour
         ResetPoint();
     }
 
+    void Update()
+    {
+
+        scoreValue.text = currentScore.ToString();
+    }
+
     public void AddPoint(int value)
     {
         currentScore += value;
-        scoreValue.text = currentScore.ToString();
+        StartCoroutine(Count(currentScore, currentScore - value));
+    }
+
+    IEnumerator Count(float target, float current)
+    {
+        float duration = 0.5f;
+        float offset = (target - current) / duration;
+
+        Debug.Log("offset = " + offset);
+
+        while (current < target)
+        {
+            current += offset * Time.deltaTime;
+            scoreValue.text = Mathf.Ceil(current).ToString();
+            yield return null;
+        }
+
+        current = target;
+        scoreValue.text = current.ToString();
     }
 
     public void ResetPoint()
