@@ -5,9 +5,12 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+
+    [Header("UI Elements")]
     [SerializeField]
     Text scoreValue;
-
+    [SerializeField]
+    Text moveValue;
     [SerializeField]
     GameObject ComboObject;
 
@@ -34,7 +37,7 @@ public class ScoreManager : MonoBehaviour
         scoreValue.text = currentScore.ToString();
     }
 
-    public void UpdateCombo(int combo)
+    public void UpdateCombo(int combo, int moves)
     {
         comboCount = combo;
         if (comboCount > 1) {
@@ -42,7 +45,7 @@ public class ScoreManager : MonoBehaviour
             ComboObject.SetActive(true);
 
             anim = ComboObject.GetComponent<Animator>();
-            anim.SetTrigger("Pop");
+            anim.Play("Anim_Combo_Pop");
 
             StartCoroutine("ComboFade");
         }
@@ -55,6 +58,8 @@ public class ScoreManager : MonoBehaviour
             anim.SetTrigger("Pop");
             StartCoroutine("ComboFade");
         }
+
+        moveValue.text = moves.ToString();
     }
 
     IEnumerator ComboFade()

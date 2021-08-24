@@ -5,15 +5,11 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-
+    [Header("UI Elements")]
     [SerializeField]
     Slider timer;
-
     [SerializeField]
     GameObject gameOverPanel;
-
-    float TimeElapsed;
-    float TimeStarted;
 
     // Start is called before the first frame update
     void Start()

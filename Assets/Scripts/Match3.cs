@@ -24,25 +24,32 @@ public class Match3 : MonoBehaviour
     [Header("Game Control")]
     [SerializeField]
     public float TimeLimit;
-
+    [SerializeField]
+    float TimeDelayBeforeHint;
+    
     float TimeElapsed;
     float TimeStarted;
 
-    int Combo;
+    float TimeWhenLastMatchHappened;
+    float TimeElapsedFromLastMatch;
 
-    bool gameStarted = false;
+    int Combo;    
 
-    public bool GameStarted {
-        get
-        {
-            return gameStarted;
-        }
+    public enum GAME_STATE
+    {
+        Ready = 0,
+        Started,
+        Closing,
+        End
     }
 
+    public GAME_STATE gameState = GAME_STATE.Ready;
 
+    public int Moves = 15;
     int width = 9;
-    int height = 14;
+    int height = 12;
     int[] fills;
+        
     Node[,] board;
 
     List<NodePiece> update;
@@ -76,9 +83,12 @@ public class Match3 : MonoBehaviour
 
     void InitalizeScore()
     {
-        TimeStarted = Time.time;
-        TimeElapsed = 0;
-        gameStarted = true;
+        //TimeStarted = Time.time;
+        //TimeElapsed = 0;
+        TimeWhenLastMatchHappened = TimeStarted;
+        TimeElapsedFromLastMatch = 0;
+
+        gameState = GAME_STATE.Started;
         Combo = 0;
     }
 
@@ -158,8 +168,9 @@ public class Match3 : MonoBehaviour
             nodeOne.SetPiece(pieceTwo);
             nodeTwo.SetPiece(pieceOne);
 
-            if (main) // only when actual flip happens
-                flipped.Add(new FlippedPieces(pieceOne, pieceTwo));
+            if (main)
+                // only when actual flip happens
+                flipped.Add(new FlippedPieces(pieceOne, pieceTwo));                            
 
             update.Add(pieceOne);
             update.Add(pieceTwo);
@@ -167,7 +178,7 @@ public class Match3 : MonoBehaviour
         else
         {
             ResetPiece(pieceOne);
-        }
+        }      
         
     }
 
@@ -431,20 +442,22 @@ public class Match3 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameStarted) {
-            TimeElapsed = Time.time - TimeStarted;
-            timeManager.SetTime(TimeLimit - TimeElapsed, TimeLimit);
+        if (gameState == GAME_STATE.Started) {
+            //TimeElapsed = Time.time - TimeStarted;                        
+            //timeManager.SetTime(TimeLimit - TimeElapsed, TimeLimit);
 
-            if (TimeElapsed >= TimeLimit) // Time over, game set
+            TimeElapsedFromLastMatch = Time.time - TimeWhenLastMatchHappened; // Time check before giving hint
+
+            if (TimeElapsedFromLastMatch >= TimeDelayBeforeHint)
             {
-                Debug.Log("Game End");
-                gameStarted = false;
-                scoreManager.ResetPoint(); // need to be moved
-                timeManager.GameEnd();
+                ShowHint();
             }
+
         }
 
         List<NodePiece> finishedUpdating = new List<NodePiece>();
+
+
         for (int i = 0; i < update.Count; i++)
         {
             NodePiece piece = update[i];
@@ -473,11 +486,12 @@ public class Match3 : MonoBehaviour
                 if (wasFlipped) // if we "flipped" to make this update
                 {
                     FlipPieces(piece.index, flippedPiece.index, false); // flip it back(main == false)
-                    Combo = 0; // Reset Combo count
-                    scoreManager.UpdateCombo(Combo);
+                    Combo = 0; // Reset Combo count                    
+                    scoreManager.UpdateCombo(Combo, Moves);
+                    
                 }
             }
-            else // case : match happend
+            else // case : match happens
             {
                 foreach(Point pnt in connected) // remove the node pieces
                 {
@@ -495,15 +509,28 @@ public class Match3 : MonoBehaviour
 
                 scoreManager.AddPoint(CalcScore(Combo)); // Add Points
                 Debug.Log(Combo);
-                Combo++;
+                Combo++;                
 
-                scoreManager.UpdateCombo(Combo);
+                scoreManager.UpdateCombo(Combo, Moves);
+
+                TimeWhenLastMatchHappened = Time.time;
+                TimeElapsedFromLastMatch = 0;
+                
 
                 ApplyGravityToBoard();
             }
             
             flipped.Remove(flip); // remove the flip after update
-            update.Remove(piece);            
+            update.Remove(piece);
+
+            //if (TimeElapsed >= TimeLimit) // Time over, game set
+            if (Moves == 0)
+            {
+                Debug.Log("Game End");
+                gameState = GAME_STATE.Closing;
+                // scoreManager.ResetPoint();
+                timeManager.GameEnd();
+            }
         }
     }
 
@@ -608,6 +635,11 @@ public class Match3 : MonoBehaviour
     public Vector2 getPoistionFromPoint(Point p)
     {
         return new Vector2(32 + (64 * p.x), -32 - (64 * p.y));
+    }
+
+    void ShowHint()
+    {
+        Debug.Log("Hint!");
     }
 
 }
