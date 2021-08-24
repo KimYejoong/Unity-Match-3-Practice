@@ -90,6 +90,8 @@ public class Match3 : MonoBehaviour
 
         gameState = GAME_STATE.Started;
         Combo = 0;
+
+        scoreManager.UpdateCombo(0, Moves);
     }
 
     void InitalizeBoard()
