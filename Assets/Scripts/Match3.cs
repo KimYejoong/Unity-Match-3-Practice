@@ -514,8 +514,7 @@ public class Match3 : MonoBehaviour
                 scoreManager.UpdateCombo(Combo, Moves);
 
                 TimeWhenLastMatchHappened = Time.time;
-                TimeElapsedFromLastMatch = 0;
-                
+                TimeElapsedFromLastMatch = 0;                
 
                 ApplyGravityToBoard();
             }
@@ -523,14 +522,13 @@ public class Match3 : MonoBehaviour
             flipped.Remove(flip); // remove the flip after update
             update.Remove(piece);
 
-            //if (TimeElapsed >= TimeLimit) // Time over, game set
-            if (Moves == 0)
+            if (gameState == GAME_STATE.Closing)
             {
-                Debug.Log("Game End");
-                gameState = GAME_STATE.Closing;
-                // scoreManager.ResetPoint();
+                Debug.Log("Game Closing");
                 timeManager.GameEnd();
+                gameState = GAME_STATE.End;
             }
+            //if (TimeElapsed >= TimeLimit) // Time over, game set
         }
     }
 

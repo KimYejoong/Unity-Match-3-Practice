@@ -41,25 +41,16 @@ public class NodePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void ResetPosition()
     {
-        if (game.gameState != Match3.GAME_STATE.Started)
-            return;
-
         pos = new Vector2(32 + (64 * index.x), -32 - (64 * index.y));
     }
 
     public void MovePosition(Vector2 move)
     {
-        if (game.gameState == Match3.GAME_STATE.End)
-            return;
-
         rect.anchoredPosition += move * Time.deltaTime * 16f;
     }
 
     public void MovePositionTo(Vector2 move)
     {
-        if (game.gameState == Match3.GAME_STATE.End)
-            return;
-
         rect.anchoredPosition = Vector2.Lerp(rect.anchoredPosition, move, Time.deltaTime * 16f);
     }
 

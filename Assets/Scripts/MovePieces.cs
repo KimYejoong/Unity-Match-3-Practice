@@ -67,6 +67,13 @@ public class MovePieces : MonoBehaviour
         {
             game.FlipPieces(moving.index, newIndex, true);
             game.Moves--;
+
+            if (game.Moves == 0)
+            {
+                Debug.Log("Last Move, Gameover");
+                game.gameState = Match3.GAME_STATE.Closing;
+                // scoreManager.ResetPoint();                
+            }
         }
         else
             game.ResetPiece(moving);
