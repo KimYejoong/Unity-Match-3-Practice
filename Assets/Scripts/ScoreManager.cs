@@ -39,10 +39,10 @@ public class ScoreManager : MonoBehaviour
 
     IEnumerator Count(float target, float current)
     {
-        float duration = 0.5f;
+        float duration = 0.4f; // time required to count
         float offset = (target - current) / duration;
 
-        Debug.Log("offset = " + offset);
+        // Debug.Log("offset = " + offset);
 
         while (current < target)
         {

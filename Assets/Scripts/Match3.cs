@@ -191,22 +191,22 @@ public class Match3 : MonoBehaviour
         {
             if (!killed[i].falling)
                 available.Add(killed[i]);
-
-            KilledPiece set = null;
-            if (available.Count > 0)
-                set = available[0];
-            else
-            {
-                GameObject kill = GameObject.Instantiate(killedPiece, killedBoard);
-                KilledPiece kPiece = kill.GetComponent<KilledPiece>();
-                set = kPiece;
-                killed.Add(kPiece);
-            }
-
-            int val = getValueAtPoint(p) - 1;
-            if (set != null && val >= 0 && val < pieces.Length)
-                set.Initialize(pieces[val], getPoistionFromPoint(p));
         }
+        
+        KilledPiece set = null;
+        if (available.Count > 0)
+            set = available[0];
+        else
+        {
+            GameObject kill = GameObject.Instantiate(killedPiece, killedBoard);
+            KilledPiece kPiece = kill.GetComponent<KilledPiece>();
+            set = kPiece;
+            killed.Add(kPiece);
+        }
+        
+        int val = getValueAtPoint(p) - 1;
+        if (set != null && val >= 0 && val < pieces.Length)
+            set.Initialize(pieces[val], getPoistionFromPoint(p));        
     }
 
     List<Point> isConnected(Point p, bool main)
