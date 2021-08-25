@@ -13,9 +13,12 @@ public class KilledPiece : MonoBehaviour
     RectTransform rect;
     Image img;
 
+    [SerializeField]
+    Text EarnedPoint;
+
 
     // Start is called before the first frame update
-    public void Initialize(Sprite piece, Vector2 start)
+    public void Initialize(Sprite piece, Vector2 start, int earnedPoints)
     {
         falling = true;
 
@@ -23,6 +26,7 @@ public class KilledPiece : MonoBehaviour
         moveDir.x = Random.Range(-1.0f, 1.0f);
         moveDir *= speed / 2;
 
+        EarnedPoint.text = earnedPoints.ToString();
         img = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
         img.sprite = piece;

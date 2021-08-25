@@ -184,7 +184,7 @@ public class Match3 : MonoBehaviour
         
     }
 
-    void KillPiece(Point p)
+    void KillPiece(Point p, int earnedPoints)
     {
         List<KilledPiece> available = new List<KilledPiece>();
         for (int i = 0; i < killed.Count; i++)
@@ -206,7 +206,7 @@ public class Match3 : MonoBehaviour
         
         int val = getValueAtPoint(p) - 1;
         if (set != null && val >= 0 && val < pieces.Length)
-            set.Initialize(pieces[val], getPoistionFromPoint(p));        
+            set.Initialize(pieces[val], getPoistionFromPoint(p), earnedPoints);        
     }
 
     List<Point> isConnected(Point p, bool main)
@@ -452,7 +452,7 @@ public class Match3 : MonoBehaviour
 
             if (TimeElapsedFromLastMatch >= TimeDelayBeforeHint)
             {
-                ShowHint();
+                //ShowHint();
             }
 
         }
@@ -497,9 +497,12 @@ public class Match3 : MonoBehaviour
             }
             else // case : match happens
             {
-                foreach(Point pnt in connected) // remove the node pieces
+                int BrokenPieces = connected.Count;
+                int EarnedPoints = CalcScore(Combo);
+
+                foreach (Point pnt in connected) // remove the node pieces
                 {
-                    KillPiece(pnt);
+                    KillPiece(pnt, EarnedPoints);
                     Node node = getNodeAtPoint(pnt);
                     NodePiece nodePiece = node.getPiece();
                     if (nodePiece != null)
@@ -511,7 +514,7 @@ public class Match3 : MonoBehaviour
                     node.SetPiece(null);                    
                 }
 
-                scoreManager.AddPoint(CalcScore(Combo)); // Add Points
+                scoreManager.AddPoint(EarnedPoints * BrokenPieces); // Add Points
                 Debug.Log(Combo);
                 Combo++;                
 
@@ -548,7 +551,7 @@ public class Match3 : MonoBehaviour
 
     int CalcScore(int combo)
     {
-        return (Mathf.Max(8, combo) + 1) * 5;
+        return (Mathf.Min(8, combo) + 1) * 5;
     }
 
     void ApplyGravityToBoard()
