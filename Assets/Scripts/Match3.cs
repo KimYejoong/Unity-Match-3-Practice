@@ -27,8 +27,8 @@ public class Match3 : MonoBehaviour
     [SerializeField]
     float TimeDelayBeforeHint;
     
-    float TimeElapsed;
-    float TimeStarted;
+    //float TimeElapsed;
+    //float TimeStarted;
 
     float TimeWhenLastMatchHappened;
     float TimeElapsedFromLastMatch;
@@ -46,7 +46,7 @@ public class Match3 : MonoBehaviour
     public GAME_STATE gameState = GAME_STATE.Ready;
 
     public int Moves = 15;
-    int width = 9;
+    int width = 9; // Caution : this should be matched with the size of ArrayLayout
     int height = 12;
     int[] fills;
         
@@ -85,7 +85,7 @@ public class Match3 : MonoBehaviour
     {
         //TimeStarted = Time.time;
         //TimeElapsed = 0;
-        TimeWhenLastMatchHappened = TimeStarted;
+        TimeWhenLastMatchHappened = Time.time; 
         TimeElapsedFromLastMatch = 0;
 
         gameState = GAME_STATE.Started;
@@ -206,7 +206,7 @@ public class Match3 : MonoBehaviour
         
         int val = getValueAtPoint(p) - 1;
         if (set != null && val >= 0 && val < pieces.Length)
-            set.Initialize(pieces[val], getPoistionFromPoint(p), earnedPoints);        
+            set.Initialize(getPoistionFromPoint(p), earnedPoints);        
     }
 
     List<Point> isConnected(Point p, bool main)

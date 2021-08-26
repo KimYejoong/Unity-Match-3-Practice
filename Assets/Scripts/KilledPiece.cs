@@ -12,14 +12,15 @@ public class KilledPiece : MonoBehaviour
     Vector2 moveDir;
     RectTransform rect;
     Image img;
+    Animator anim;
 
     [SerializeField]
     Text EarnedPoint;
 
-
-    // Start is called before the first frame update
-    public void Initialize(Sprite piece, Vector2 start, int earnedPoints)
+        
+    public void Initialize(Vector2 start, int earnedPoints)
     {
+       
         falling = true;
 
         moveDir = Vector2.up;
@@ -27,10 +28,15 @@ public class KilledPiece : MonoBehaviour
         moveDir *= speed / 2;
 
         EarnedPoint.text = earnedPoints.ToString();
-        img = GetComponent<Image>();
+        //img = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
-        img.sprite = piece;
+        //img.sprite = piece;
         rect.anchoredPosition = start;
+
+        anim = GetComponent<Animator>();
+        anim.Play("Anim_Score_Pop", -1, 0f);
+        Debug.Log("CurrentAnimationTime = " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
+        this.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -38,10 +44,15 @@ public class KilledPiece : MonoBehaviour
     {
         if (!falling)
             return;
-        moveDir.y -= Time.deltaTime * gravity;
-        moveDir.x = Mathf.Lerp(moveDir.x, 0, Time.deltaTime);
-        rect.anchoredPosition += moveDir * Time.deltaTime * speed;
-        if (rect.position.x < -32f || rect.position.x > Screen.width + 32f || rect.position.y < -32f || rect.position.y > Screen.height + 32f)
+        //moveDir.y -= Time.deltaTime * gravity;
+        //moveDir.x = Mathf.Lerp(moveDir.x, 0, Time.deltaTime);
+        //rect.anchoredPosition += moveDir * Time.deltaTime * speed;
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Anim_Score_Pop") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f) {
+        // if (rect.position.x < -32f || rect.position.x > Screen.width + 32f || rect.position.y < -32f || rect.position.y > Screen.height + 32f)
             falling = false;
+            this.gameObject.SetActive(false);
+            //Debug.Log("Animation End");
+
+        }
     }
 }

@@ -775,7 +775,7 @@ MonoBehaviour:
   TimeLimit: 20
   TimeDelayBeforeHint: 5
   gameState: 0
-  Moves: 15
+  Moves: 5
 --- !u!4 &869164366
 Transform:
   m_ObjectHideFlags: 0
