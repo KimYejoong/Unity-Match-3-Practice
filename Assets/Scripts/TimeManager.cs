@@ -28,6 +28,11 @@ public class TimeManager : MonoBehaviour
         timer.value = timeElapsed / timeMax;
     }
 
+    public float GetTime()
+    {
+        return timer.value;
+    }
+
     public void GameEnd()
     {
         gameOverPanel.SetActive(true);

@@ -27,8 +27,8 @@ public class Match3 : MonoBehaviour
     [SerializeField]
     float TimeDelayBeforeHint;
     
-    //float TimeElapsed;
-    //float TimeStarted;
+    float TimeElapsed;
+    float TimeStarted;
 
     float TimeWhenLastMatchHappened;
     float TimeElapsedFromLastMatch;
@@ -83,8 +83,8 @@ public class Match3 : MonoBehaviour
 
     void InitalizeScore()
     {
-        //TimeStarted = Time.time;
-        //TimeElapsed = 0;
+        TimeStarted = Time.time;
+        TimeElapsed = 0;
         TimeWhenLastMatchHappened = Time.time; 
         TimeElapsedFromLastMatch = 0;
 
@@ -445,8 +445,14 @@ public class Match3 : MonoBehaviour
     void Update()
     {
         if (gameState == GAME_STATE.Started) {
-            //TimeElapsed = Time.time - TimeStarted;                        
-            //timeManager.SetTime(TimeLimit - TimeElapsed, TimeLimit);
+            TimeElapsed = Time.time - TimeStarted;                        
+            timeManager.SetTime(TimeLimit - TimeElapsed, TimeLimit);
+
+            if (TimeElapsed >= TimeLimit) // Time over, game set
+            {
+                TimeElapsed = TimeLimit;
+                gameState = GAME_STATE.Closing;
+            }
 
             TimeElapsedFromLastMatch = Time.time - TimeWhenLastMatchHappened; // Time check before giving hint
 
@@ -528,9 +534,6 @@ public class Match3 : MonoBehaviour
             
             flipped.Remove(flip); // remove the flip after update
             update.Remove(piece);            
-
-
-            //if (TimeElapsed >= TimeLimit) // Time over, game set
         }
 
                     
@@ -542,16 +545,48 @@ public class Match3 : MonoBehaviour
             {
                 Debug.Log("Game Closing");
 
-                timeManager.GameEnd();
+                StartCoroutine(AddScoreFromRemainTime(TimeLimit - TimeElapsed));
+                timeManager.GameEnd();                
                 gameState = GAME_STATE.End;
             }
         }
 
     }
 
+    IEnumerator AddScoreFromRemainTime(float time)
+    {
+        if (time > 0)
+        {
+            float timeRemain = time;
+            float delay = 1.0f;
+            float offset = timeRemain / delay;
+
+            float timeTemp = timeRemain;
+
+            yield return new WaitForSeconds(0.5f);            
+
+            while (timeTemp > 0)
+            {
+                timeTemp -= offset * Time.deltaTime;
+                timeManager.SetTime(timeTemp, TimeLimit);
+                yield return null;
+            }
+            scoreManager.AddPoint(CalcScoreFromRemainTime(timeRemain));
+        }
+        else
+        {
+            yield break;
+        }
+    }
+
     int CalcScore(int combo)
     {
-        return (Mathf.Min(8, combo) + 1) * 5;
+        return (Mathf.Min(8, combo) + 1) * 25;
+    }
+
+    int CalcScoreFromRemainTime(float time)
+    {
+        return (int)Mathf.Floor(time) * 100;
     }
 
     void ApplyGravityToBoard()
