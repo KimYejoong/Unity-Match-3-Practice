@@ -23,9 +23,9 @@ public class TimeManager : MonoBehaviour
         
     }
 
-    public void SetTime(float timeElapsed, float timeMax)
+    public void SetTime(float timeRemaining, float timeMax)
     {
-        timer.value = timeElapsed / timeMax;
+        timer.value = timeRemaining / timeMax;
     }
 
     public float GetTime()

@@ -64,31 +64,21 @@ public class ScoreManager : MonoBehaviour
     public void UpdateCombo(int combo, int moves)
     {
         comboCount = combo;
-        if (comboCount > 1) {
-            ComboObject.GetComponent<Text>().text = "+" + (comboCount - 1).ToString();
-            ComboObject.SetActive(true);
 
-            anim = ComboObject.GetComponent<Animator>();
-            anim.Play("Anim_Combo_Pop");
-
-            StartCoroutine("ComboFade");
-        }
-        else if (comboCount == 0)
-        {            
-            ComboObject.GetComponent<Text>().text = ":(";
-            ComboObject.SetActive(true);
-
-            anim = ComboObject.GetComponent<Animator>();
-            anim.SetTrigger("Pop");
-            StartCoroutine("ComboFade");
-        }
+        ComboObject.GetComponent<Text>().text = (comboCount > 0) ? "+" + comboCount.ToString() : ":(";
+        ComboObject.SetActive(true);
+        
+        anim = ComboObject.GetComponent<Animator>();
+        anim.Play("Anim_Combo_Pop", -1, 0f);
+        
+        StartCoroutine("ComboFade");        
 
         moveValue.text = moves.ToString();
     }
 
     IEnumerator ComboFade()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); // wait for 1s before disappearing
         ComboObject.SetActive(false);
     }
 

@@ -9,8 +9,26 @@ public class Match3 : MonoBehaviour
     [SerializeField]
     ScoreManager scoreManager;
 
+    public ScoreManager ScoreManager
+    {
+        get { return scoreManager; }
+    }
+
     [SerializeField]
     TimeManager timeManager;
+
+    public TimeManager TimeManager
+    {
+        get { return timeManager; }
+    }
+
+    [SerializeField]
+    SFXManager sfxManager;
+
+    public SFXManager SFXManager
+    {
+        get { return sfxManager;  }
+    }
 
     [Header("UI Elements")]
     public Sprite[] pieces;
@@ -170,9 +188,10 @@ public class Match3 : MonoBehaviour
             nodeOne.SetPiece(pieceTwo);
             nodeTwo.SetPiece(pieceOne);
 
-            if (main)
-                // only when actual flip happens
-                flipped.Add(new FlippedPieces(pieceOne, pieceTwo));                            
+            if (main) {// only when actual flip happens 
+                flipped.Add(new FlippedPieces(pieceOne, pieceTwo));
+                sfxManager.PlaySound("FlipTry");
+            }
 
             update.Add(pieceOne);
             update.Add(pieceTwo);
@@ -498,7 +517,7 @@ public class Match3 : MonoBehaviour
                     FlipPieces(piece.index, flippedPiece.index, false); // flip it back(main == false)
                     Combo = 0; // Reset Combo count                    
                     scoreManager.UpdateCombo(Combo, Moves);
-                    
+                    sfxManager.PlaySound("MatchFail");
                 }
             }
             else // case : match happens
@@ -526,6 +545,7 @@ public class Match3 : MonoBehaviour
 
                 scoreManager.UpdateCombo(Combo, Moves);
 
+                sfxManager.PlaySound("MatchSuccess");
                 TimeWhenLastMatchHappened = Time.time;
                 TimeElapsedFromLastMatch = 0;                
 
@@ -540,12 +560,13 @@ public class Match3 : MonoBehaviour
 
         if (gameState == GAME_STATE.Closing)
         {
-            Debug.Log("totalCount = " + totalCount);
+            //Debug.Log("totalCount = " + totalCount);
             if (totalCount == 0)
             {
                 Debug.Log("Game Closing");
 
                 StartCoroutine(AddScoreFromRemainTime(TimeLimit - TimeElapsed));
+                sfxManager.PlaySound("GameOver");
                 timeManager.GameEnd();                
                 gameState = GAME_STATE.End;
             }
@@ -575,6 +596,7 @@ public class Match3 : MonoBehaviour
         }
         else
         {
+            gameState = GAME_STATE.End;
             yield break;
         }
     }
