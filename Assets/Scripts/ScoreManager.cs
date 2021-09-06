@@ -26,9 +26,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     void Update()
-    {
-
-        scoreValue.text = currentScore.ToString();
+    {        
     }
 
     public void AddPoint(int value)
@@ -37,29 +35,35 @@ public class ScoreManager : MonoBehaviour
         StartCoroutine(Count(currentScore, currentScore - value));
     }
 
-    IEnumerator Count(float target, float current)
+    IEnumerator Count(float targetValue, float currentValue)
     {
         float duration = 0.4f; // time required to count
-        float offset = (target - current) / duration;
+        float offset = (targetValue - currentValue) / duration;
 
         // Debug.Log("offset = " + offset);
 
-        while (current < target)
+        while (currentValue < targetValue)
         {
-            current += offset * Time.deltaTime;
-            scoreValue.text = Mathf.Ceil(current).ToString();
+            currentValue += offset * Time.deltaTime;
+            SetScoreText(currentValue);
             yield return null;
         }
 
-        current = target;
-        scoreValue.text = current.ToString();
+        currentValue = targetValue;
+        SetScoreText(currentValue);
     }
 
     public void ResetPoint()
     {
         currentScore = 0;
-        scoreValue.text = currentScore.ToString();
+        SetScoreText(currentScore);
     }
+
+    private void SetScoreText(float value)
+    {
+        scoreValue.text = string.Format("{0:#,###}", Mathf.Ceil(value));
+    }
+
 
     public void UpdateCombo(int combo, int moves)
     {

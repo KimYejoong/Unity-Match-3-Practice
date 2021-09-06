@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MovePieces : MonoBehaviour
 {
-    public static MovePieces instance;
-    Match3 game;
+    public static MovePieces instance;    
 
     NodePiece moving;
     Point newIndex;
@@ -17,8 +16,7 @@ public class MovePieces : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {
-        game = GetComponent<Match3>();
+    {        
     }
 
     // Update is called once per frame
@@ -43,7 +41,7 @@ public class MovePieces : MonoBehaviour
 
             newIndex.add(add);
 
-            Vector2 pos = game.getPoistionFromPoint(moving.index);
+            Vector2 pos = Match3.Instance.getPoistionFromPoint(moving.index);
             if (!newIndex.Equals(moving.index))
                 pos += Point.mult(new Point(add.x, -add.y), 16).ToVector();
 
@@ -65,18 +63,18 @@ public class MovePieces : MonoBehaviour
 
         if (!newIndex.Equals(moving.index))
         {
-            game.FlipPieces(moving.index, newIndex, true);
-            game.Moves--;
+            Match3.Instance.FlipPieces(moving.index, newIndex, true);
+            Match3.Instance.Moves--;
 
-            if (game.Moves == 0)
+            if (Match3.Instance.Moves == 0)
             {
                 Debug.Log("Last Move, Gameover");
-                game.gameState = Match3.GAME_STATE.Closing;
-                // scoreManager.ResetPoint();                
+                Match3.Instance.gameState = Match3.GAME_STATE.Closing;
+                           
             }
         }
         else
-            game.ResetPiece(moving);
+            Match3.Instance.ResetPiece(moving);
         moving = null;
         
     }

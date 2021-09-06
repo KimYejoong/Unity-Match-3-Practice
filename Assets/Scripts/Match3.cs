@@ -4,31 +4,51 @@ using UnityEngine;
 
 public class Match3 : MonoBehaviour
 {
+    private static Match3 instance = null;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;            
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    public static Match3 Instance
+    {
+        get
+        {
+            if(!instance)
+            {
+                instance = FindObjectOfType(typeof(Match3)) as Match3;
+
+                if (instance == null)
+                {
+                    Debug.Log("No Singletone object");
+                }
+
+            }
+
+            return instance;
+        }
+    }
+
     public ArrayLayout boardLayout;
 
     [SerializeField]
     ScoreManager scoreManager;
 
-    public ScoreManager ScoreManager
-    {
-        get { return scoreManager; }
-    }
-
     [SerializeField]
     TimeManager timeManager;
 
-    public TimeManager TimeManager
-    {
-        get { return timeManager; }
-    }
-
     [SerializeField]
     SFXManager sfxManager;
-
-    public SFXManager SFXManager
-    {
-        get { return sfxManager;  }
-    }
 
     [Header("UI Elements")]
     public Sprite[] pieces;
@@ -61,6 +81,7 @@ public class Match3 : MonoBehaviour
         End
     }
 
+    [HideInInspector]
     public GAME_STATE gameState = GAME_STATE.Ready;
 
     public int Moves = 15;
