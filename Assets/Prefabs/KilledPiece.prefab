@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   falling: 0
-  EarnedPoint: {fileID: 4392636574979360628}
+  earnedPoint: {fileID: 4392636574979360628}
 --- !u!95 &7141198603565555379
 Animator:
   serializedVersion: 3

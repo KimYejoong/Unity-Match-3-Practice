@@ -4,80 +4,74 @@ using UnityEngine;
 
 public class MovePieces : MonoBehaviour
 {
-    public static MovePieces instance;    
+    public static MovePieces instance;
 
-    NodePiece moving;
-    Point newIndex;
-    Vector2 mouseStart;
+    private NodePiece _moving;
+    private Point _newIndex;
+    private Vector2 _mouseStart;
 
     private void Awake()
     {
         instance = this;
     }
-    // Start is called before the first frame update
-    void Start()
-    {        
-    }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (moving != null)
+        if (_moving == null)
+            return;
+        
+        Vector2 dir = ((Vector2)Input.mousePosition - _mouseStart);
+        Vector2 nDir = dir.normalized;
+        Vector2 aDir = new Vector2(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
+
+        _newIndex = Point.Clone(_moving.index);
+        Point add = Point.Zero;
+        if (dir.magnitude > 32) // if mouse goes more than 32pxs from starting point
         {
-            Vector2 dir = ((Vector2)Input.mousePosition - mouseStart);
-            Vector2 nDir = dir.normalized;
-            Vector2 aDir = new Vector2(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
-
-            newIndex = Point.clone(moving.index);
-            Point add = Point.zero;
-            if (dir.magnitude > 32) // if mouse goes more than 32pxs from starting point
-            {
-                // drag direction
-                if (aDir.x > aDir.y)
-                    add = (new Point((nDir.x > 0) ? 1 : -1, 0));
-                else if (aDir.y > aDir.x)
-                    add = (new Point(0, (nDir.y > 0) ? -1 : 1));
-            }
-
-            newIndex.add(add);
-
-            Vector2 pos = Match3.Instance.getPoistionFromPoint(moving.index);
-            if (!newIndex.Equals(moving.index))
-                pos += Point.mult(new Point(add.x, -add.y), 16).ToVector();
-
-            moving.MovePositionTo(pos);
+            // drag direction
+            if (aDir.x > aDir.y)
+                add = (new Point((nDir.x > 0) ? 1 : -1, 0));
+            else if (aDir.y > aDir.x)
+                add = (new Point(0, (nDir.y > 0) ? -1 : 1));
         }
+
+        _newIndex.Add(add);
+
+        Vector2 pos = Match3.Instance.GetPositionFromPoint(_moving.index);
+        if (!_newIndex.Equals(_moving.index))
+            pos += Point.Mult(new Point(add.x, -add.y), 16).ToVector();
+
+        _moving.MovePositionTo(pos);
     }
 
     public void MovePiece(NodePiece piece)
     {
-        if (moving != null) return;
-        moving = piece;
-        mouseStart = Input.mousePosition;
+        if (_moving != null) return;
+        _moving = piece;
+        _mouseStart = Input.mousePosition;
     }
 
     public void DropPiece()
     {
-        if (moving == null) return;
+        if (_moving == null) return;
         Debug.Log("Dropped");
 
-        if (!newIndex.Equals(moving.index))
+        if (!_newIndex.Equals(_moving.index))
         {
-            Match3.Instance.FlipPieces(moving.index, newIndex, true);
-            Match3.Instance.Moves--;
+            Match3.Instance.FlipPieces(_moving.index, _newIndex, true);
+            Match3.Instance.moves--;
 
-            if (Match3.Instance.Moves == 0)
+            if (Match3.Instance.moves == 0)
             {
-                Debug.Log("Last Move, Gameover");
-                Match3.Instance.gameState = Match3.GAME_STATE.Closing;
+                Debug.Log("Last Move, Game over");
+                Match3.Instance.gameState = Match3.GameState.Closing;
                            
             }
         }
         else
-            Match3.Instance.ResetPiece(moving);
-        moving = null;
+            Match3.Instance.ResetPiece(_moving);
         
+        _moving = null;
     }
-
-
 }

@@ -24,70 +24,52 @@ public class Point
         return (x == p.x && y == p.y);
     }
 
-    public static Point fromVector(Vector2 v)
+    public static Point FromVector(Vector2 v)
     {
         return new Point((int)v.x, (int)v.y);
     }
 
-    public static Point fromVector(Vector3 v)
+    public static Point FromVector(Vector3 v)
     {
         return new Point((int)v.x, (int)v.y);
     }
 
-    public void mult(int m)
+    public void Mult(int m)
     {
         x *= m;
         y *= m;
     }
 
-    public void add(Point o)
+    public void Add(Point o)
     {
         x += o.x;
         y += o.y;
     }
 
-    public static Point mult(Point p, int m)
+    public static Point Mult(Point p, int m)
     {
         return new Point(p.x * m, p.y * m);
     }
 
-    public static Point add(Point p, Point o)
+    public static Point Add(Point p, Point o)
     {
         return new Point(p.x + o.x, p.y + o.y);
     }
 
-    public static Point clone(Point p)
+    public static Point Clone(Point p)
     {
         return new Point(p.x, p.y);
     }
 
-    public static Point zero
-    {
-        get { return new Point(0, 0); }
-    }
+    public static Point Zero => new Point(0, 0);
 
-    public static Point one
-    {
-        get { return new Point(1, 1); }
-    }
+    public static Point One => new Point(1, 1);
 
-    public static Point up
-    {
-        get { return new Point(0, 1); }
-    }
+    public static Point Up => new Point(0, 1);
 
-    public static Point down
-    {
-        get { return new Point(0, -1); }
-    }
+    public static Point Down => new Point(0, -1);
 
-    public static Point left
-    {
-        get { return new Point(-1, 0); }
-    }
+    public static Point Left => new Point(-1, 0);
 
-    public static Point right
-    {
-        get { return new Point(1, 0); }
-    }
+    public static Point Right => new Point(1, 0);
 }

@@ -7,48 +7,42 @@ public class SFXManager : MonoBehaviour
     public AudioClip audioFlipTry;
     public AudioClip audioMatchSuccess;
     public AudioClip audioMatchFail;
-    public AudioClip audioGameOver;    
+    public AudioClip audioGameOver;
 
-    AudioSource audioSource;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
-        this.audioSource = GetComponent<AudioSource>();
+        this._audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlaySound(string sfx)
     {
-        
-    }
-
-    public void PlaySound(string SFX)
-    {
-        switch(SFX)
+        switch(sfx)
         {
             case "FlipTry":
-                audioSource.clip = audioFlipTry;
+                _audioSource.clip = audioFlipTry;
                 break;
 
             case "MatchSuccess":
-                audioSource.clip = audioMatchSuccess;
+                _audioSource.clip = audioMatchSuccess;
                 break;
 
             case "MatchFail":
-                audioSource.clip = audioMatchFail;
+                _audioSource.clip = audioMatchFail;
                 break;
 
             case "GameOver":
-                audioSource.clip = audioGameOver;
+                _audioSource.clip = audioGameOver;
                 break;
         }
 
-        audioSource.Play();
+        _audioSource.Play();
     }
 
-    void StopSound()
+    public void StopSound()
     {
-        audioSource.Stop();
+        _audioSource.Stop();
     }
 }

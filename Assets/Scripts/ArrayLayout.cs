@@ -5,10 +5,10 @@ using System.Collections;
 public class ArrayLayout  {
 
 	[System.Serializable]
-	public struct rowData {
+	public struct RowData {
 		public bool[] row;
 	}
 
     public Grid grid;
-    public rowData[] rows = new rowData[12];
+    public RowData[] rows = new RowData[12];
 }

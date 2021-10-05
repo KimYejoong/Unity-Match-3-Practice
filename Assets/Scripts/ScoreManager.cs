@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
@@ -8,40 +9,34 @@ public class ScoreManager : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField]
-    Text scoreValue;
-    [SerializeField]
-    Text moveValue;
-    [SerializeField]
-    GameObject ComboObject;
+    private Text scoreValue;
+    [SerializeField] 
+    private Text moveValue;
+    [SerializeField] 
+    private GameObject comboObject;
 
-    Animator anim;
+    private Animator _anim;
 
-    int currentScore = 0;
-    int comboCount = 0;
+    private int _currentScore = 0;
+    private int _comboCount = 0;
 
     private void Start()
     {
-        ComboObject.SetActive(false);
+        comboObject.SetActive(false);
         ResetPoint();
-    }
-
-    void Update()
-    {        
     }
 
     public void AddPoint(int value)
     {
-        currentScore += value;
-        StartCoroutine(Count(currentScore, currentScore - value));
+        _currentScore += value;
+        StartCoroutine(Count(_currentScore, _currentScore - value));
     }
 
-    IEnumerator Count(float targetValue, float currentValue)
+    private IEnumerator Count(float targetValue, float currentValue)
     {
         float duration = 0.4f; // time required to count
         float offset = (targetValue - currentValue) / duration;
-
-        // Debug.Log("offset = " + offset);
-
+        
         while (currentValue < targetValue)
         {
             currentValue += offset * Time.deltaTime;
@@ -53,37 +48,37 @@ public class ScoreManager : MonoBehaviour
         SetScoreText(currentValue);
     }
 
-    public void ResetPoint()
+    private void ResetPoint()
     {
-        currentScore = 0;
-        SetScoreText(currentScore);
+        _currentScore = 0;
+        SetScoreText(_currentScore);
     }
 
     private void SetScoreText(float value)
     {
-        scoreValue.text = string.Format("{0:#,###}", Mathf.Ceil(value));
+        scoreValue.text = $"{Mathf.Ceil(value):#,###}";
     }
 
 
     public void UpdateCombo(int combo, int moves)
     {
-        comboCount = combo;
+        _comboCount = combo;
 
-        ComboObject.GetComponent<Text>().text = (comboCount > 0) ? "+" + comboCount.ToString() : ":(";
-        ComboObject.SetActive(true);
+        comboObject.GetComponent<Text>().text = (_comboCount > 0) ? "+" + _comboCount.ToString() : ":(";
+        comboObject.SetActive(true);
         
-        anim = ComboObject.GetComponent<Animator>();
-        anim.Play("Anim_Combo_Pop", -1, 0f);
+        _anim = comboObject.GetComponent<Animator>();
+        _anim.Play("Anim_Combo_Pop", -1, 0f);
         
-        StartCoroutine("ComboFade");        
+        StartCoroutine(ComboFade());        
 
         moveValue.text = moves.ToString();
     }
 
-    IEnumerator ComboFade()
+    private IEnumerator ComboFade()
     {
         yield return new WaitForSeconds(1f); // wait for 1s before disappearing
-        ComboObject.SetActive(false);
+        comboObject.SetActive(false);
     }
 
 }

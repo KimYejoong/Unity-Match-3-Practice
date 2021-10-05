@@ -7,20 +7,14 @@ public class TimeManager : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField]
-    Slider timer;
-    [SerializeField]
-    GameObject gameOverPanel;
+    private Slider timer;
+    [SerializeField] 
+    private GameObject gameOverPanel;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         gameOverPanel.SetActive(false);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SetTime(float timeRemaining, float timeMax)
