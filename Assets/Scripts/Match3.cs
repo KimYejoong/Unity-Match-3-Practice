@@ -61,7 +61,6 @@ public class Match3 : MonoBehaviour
     public GameObject nodePiece;
     public GameObject killedPiece;
 
-    
     [Header("Game Control")]
     [SerializeField]
     public float timeLimit;
@@ -183,7 +182,6 @@ public class Match3 : MonoBehaviour
                 rect.anchoredPosition = new Vector2(32 + (64 * x), -32 - (64 * y));
                 piece.Initialize(val, new Point(x, y), pieces[val - 1]);
                 node.SetPiece(piece);
-                
             }
         }
     }
@@ -220,8 +218,7 @@ public class Match3 : MonoBehaviour
         else
         {
             ResetPiece(pieceOne);
-        }      
-        
+        }
     }
 
     private void KillPiece(Point p, int earnedPoints)
@@ -251,7 +248,6 @@ public class Match3 : MonoBehaviour
 
     private List<Point> IsConnected(Point p, bool main)
     {
-
         List<Point> connected = new List<Point>();
         int val = GetValueAtPoint(p);
         Point[] directions =
@@ -463,7 +459,7 @@ public class Match3 : MonoBehaviour
                 }
 
                 scoreManager.AddPoint(earnedPoints * brokenPieces); // Add Points
-                Debug.Log(_combo);
+                //Debug.Log(_combo);
                 _combo++;                
 
                 scoreManager.UpdateCombo(_combo, moves);
@@ -485,7 +481,7 @@ public class Match3 : MonoBehaviour
         if (totalCount != 0)
             return;
         
-        Debug.Log("Game Closing");
+        //Debug.Log("Game Closing");
 
         StartCoroutine(AddScoreFromRemainTime(timeLimit - _timeElapsed));
         sfxManager.PlaySound("GameOver");
@@ -516,7 +512,6 @@ public class Match3 : MonoBehaviour
         else
         {
             gameState = GameState.End;
-            yield break;
         }
     }
 
@@ -540,7 +535,7 @@ public class Match3 : MonoBehaviour
                 Node node = GetNodeAtPoint(p);
                 int val = GetValueAtPoint(p);
 
-                if (val != 0) // if it is filled with sth, then just continue
+                if (val != 0) // if it is filled with sth, then just continue to next
                     continue;
 
                 for (int ny = (y - 1); ny >= -1; ny--)

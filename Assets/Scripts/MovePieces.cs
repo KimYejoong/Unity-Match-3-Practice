@@ -55,7 +55,7 @@ public class MovePieces : MonoBehaviour
     public void DropPiece()
     {
         if (_moving == null) return;
-        Debug.Log("Dropped");
+        //Debug.Log("Dropped");
 
         if (!_newIndex.Equals(_moving.index))
         {
@@ -64,7 +64,7 @@ public class MovePieces : MonoBehaviour
 
             if (Match3.Instance.moves == 0)
             {
-                Debug.Log("Last Move, Game over");
+                //Debug.Log("Last Move, Game over");
                 Match3.Instance.gameState = Match3.GameState.Closing;
                            
             }
